@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <size android:height="120dp" android:width="120dp"/>
+            <gradient
+                android:startColor="#FB3A5A"
+                android:centerColor="#BB1570"
+                android:endColor="#5D0068"
+                >
+
+            </gradient>
+        </shape>
+    </item>
+    <item
+
+        android:drawable="@drawable/wave__2_"
+        />
+    <item
+
+        android:drawable="@drawable/wave__1_"
+        />
+    <item
+        android:drawable="@drawable/wave"
+        />
+
+
+</layer-list>
