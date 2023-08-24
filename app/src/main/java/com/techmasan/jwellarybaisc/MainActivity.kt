@@ -116,6 +116,6 @@ class MainActivity : AppCompatActivity() {
         grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
 
         binding.recyclGrid.layoutManager = GridLayoutManager(context,2)
-        binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,context)
+        binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,context,this)
     }
 }

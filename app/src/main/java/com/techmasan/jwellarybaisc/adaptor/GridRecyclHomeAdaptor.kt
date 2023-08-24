@@ -1,5 +1,6 @@
 package com.techmasan.jwellarybaisc.adaptor
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.techmasan.jwellarybaisc.R
+import com.techmasan.jwellarybaisc.Util
 
 import com.techmasan.jwellarybaisc.model.Grid1Home
 
 
-class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context) :RecyclerView.Adapter<GridRecyclHomeAdaptor.ViewHolder>(){
+class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var activity:Activity) :RecyclerView.Adapter<GridRecyclHomeAdaptor.ViewHolder>(){
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         var imgGrid:ImageView = itemView.findViewById(R.id.imgGrid)
         var txtTitle:TextView = itemView.findViewById(R.id.txtTitle)
         var txtPrice:TextView = itemView.findViewById(R.id.txtPrice)
+        var txtShowDetails:TextView = itemView.findViewById(R.id.txtShowDetails)
 
 
     }
@@ -38,7 +41,14 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context) :Re
         Picasso.get().load(data.image).into(holder.imgGrid);
         holder.txtTitle.text = data.title
         holder.txtPrice.text = data.price
-
+        holder.txtShowDetails.setOnClickListener {
+            var dialog = Util.makeDialog(R.layout.item_product_dialog, activity)
+            var imgClose:ImageView = dialog.findViewById(R.id.imgClose)
+            imgClose.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
 
     }
 }
