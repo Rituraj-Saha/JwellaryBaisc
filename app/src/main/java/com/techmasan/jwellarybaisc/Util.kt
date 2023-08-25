@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 object Util {
     fun makeDialog(layoutId:Int,activity:Activity):Dialog{
@@ -15,5 +16,12 @@ object Util {
         dialog.getWindow()?.getAttributes()?.windowAnimations = R.style.animation;
 
         return dialog
+    }
+    var IS_LOGIN:Boolean = false
+    fun isLogin():Boolean{
+        return IS_LOGIN;
+    }
+    fun mToast(activity: Activity,msg:String){
+        Toast.makeText(activity.applicationContext,msg,Toast.LENGTH_LONG).show()
     }
 }

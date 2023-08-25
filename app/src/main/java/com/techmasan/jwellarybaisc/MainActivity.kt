@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
        binding.bottomNav.add(MeowBottomNavigation.Model(1,R.drawable.baseline_history_24))
         binding.bottomNav.add(MeowBottomNavigation.Model(2,R.drawable.baseline_home_24))
-        binding.bottomNav.add(MeowBottomNavigation.Model(3,R.drawable.ic_cart))
+        binding.bottomNav.add(MeowBottomNavigation.Model(3,R.drawable.baseline_person_24))
         binding.bottomNav.show(2)
 
     }
@@ -105,15 +105,21 @@ class MainActivity : AppCompatActivity() {
             .appendPath(resources.getResourceTypeName(R.drawable.jwel))
             .appendPath(resources.getResourceEntryName(R.drawable.jwel))
             .build()
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless"))
+
+        var imageList = ArrayList<String>()
+        imageList.add(imageUri2.toString())
+        imageList.add(imageUri2.toString())
+        imageList.add(imageUri2.toString())
+
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
+        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
 
         binding.recyclGrid.layoutManager = GridLayoutManager(context,2)
         binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,context,this)

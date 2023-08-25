@@ -4,28 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="300dp">
-    <ImageView
-        android:id="@+id/imgClose"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/baseline_close_24"
-        android:background="@drawable/circlr_card_2"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"/>
+
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vpProductBanner"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/border_02"
+
         />
     <LinearLayout
         android:id="@+id/SliderDots"
@@ -33,7 +35,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="260dp"
+        android:layout_alignParentBottom="true"
         />
     </RelativeLayout>
     <LinearLayout
@@ -66,13 +68,14 @@
             android:ellipsize="end"
             android:maxLines="4"
             android:layout_weight=".6"
+            android:text="desc..."
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="bottom"
-            android:layout_weight=".3"
+            android:layout_weight=".2"
             android:orientation="horizontal">
 
             <TextView
@@ -114,10 +117,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/border_01"
-                    android:backgroundTint="@color/colorPrimary"
                     android:orientation="horizontal"
                     >
+                    <LinearLayout
+                        android:id="@+id/linCart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_01"
+                        android:backgroundTint="@color/colorPrimary"
+                        >
                     <TextView
                         android:id="@+id/txtAddCart"
                         android:layout_width="match_parent"
@@ -130,7 +138,9 @@
                         android:clickable="true"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
                         />
+                    </LinearLayout>
 
                 </LinearLayout>
                 <LinearLayout
@@ -177,8 +187,43 @@
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
-
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".1"
+            android:layout_margin="20dp"
+            android:background="@drawable/border_01"
+            android:backgroundTint="#AFF359"
+            android:orientation="horizontal"
+            >
+        <TextView
+            android:id="@+id/txtProceed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:text="Proceed"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:clickable="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            />
+        </LinearLayout>
     </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/imgClose"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_close_24"
+            android:background="@drawable/circlr_card_2"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            />
+    </RelativeLayout>
 
 </LinearLayout>

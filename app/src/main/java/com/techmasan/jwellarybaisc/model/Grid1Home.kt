@@ -6,6 +6,7 @@ data class Grid1Home (
     var price:String,
     var qty:String,
     var title:String,
+    var imageList:List<String>,
 
 
 )
