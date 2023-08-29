@@ -2,14 +2,14 @@
     <!-- Drop Shadow Stack -->
     <item>
         <shape>
-            <padding android:top="0.5dp" android:right="0.5dp" android:bottom="1dp" android:left="0.5dp" />
+            <padding android:top="0.9dp" android:right="0.9dp" android:bottom="1dp" android:left="0.9dp" />
             <solid android:color="#10D7CED1" />
             <corners android:radius="8dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <padding android:top="0.5dp" android:right="0dp" android:bottom="1dp" android:left="0.5dp" />
+            <padding android:top="0.9dp" android:right="0dp" android:bottom="1dp" android:left="0.5dp" />
             <solid android:color="#10D7CED1" />
             <corners android:radius="7dp" />
         </shape>
@@ -55,9 +55,10 @@
     <item>
         <shape>
             <gradient
-                android:startColor="#FFCEE1"
-                android:endColor="#F9C7A7"/>
+                android:startColor="#EFC0D5"
+                android:endColor="#F7E2D3"/>
             <corners android:radius="3dp" />
         </shape>
     </item>
-    </layer-list>
+
+</layer-list>

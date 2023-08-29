@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-
+    id 'kotlin-kapt'
 }
 
 android {
@@ -28,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -40,6 +40,9 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.5'
+    }
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
     }
 
 }
@@ -57,6 +60,16 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
 
     implementation 'com.etebarian:meow-bottom-navigation:1.2.0'
+
+
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+
+    // Lifecycle components
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
 
     def compose_version = "1.0.0"
     implementation("androidx.compose.runtime:runtime:$compose_version")

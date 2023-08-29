@@ -42,7 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingStart="16sp"
         android:weightSum="1"
         >
         <TextView
@@ -51,6 +50,7 @@
             android:layout_height="0dp"
             android:textSize="16sp"
             android:text="Product Name"
+            android:paddingStart="16sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:fontFamily="sans-serif-condensed-light"
@@ -67,8 +67,9 @@
             android:paddingBottom="10dp"
             android:ellipsize="end"
             android:maxLines="4"
-            android:layout_weight=".6"
+            android:layout_weight=".5"
             android:text="desc..."
+            android:paddingStart="16sp"
             />
 
         <LinearLayout
@@ -76,7 +77,8 @@
             android:layout_height="0dp"
             android:layout_gravity="bottom"
             android:layout_weight=".2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="16sp">
 
             <TextView
                 android:id="@+id/txtBasePrice"
@@ -99,7 +101,7 @@
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="₹98 "/>
+                android:text="₹98"/>
             <TextView
                 android:id="@+id/saveTxt"
                 android:layout_width="wrap_content"
@@ -166,7 +168,6 @@
                         android:id="@+id/txtQty"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
-                        android:text="2"
                         android:gravity="center"
                         android:textSize="18sp"
                         android:textColor="@color/black"
@@ -187,21 +188,33 @@
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".1"
-            android:layout_margin="20dp"
-            android:background="@drawable/border_01"
-            android:backgroundTint="#AFF359"
             android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             >
+         <LinearLayout
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight=".5"
+             android:background="@drawable/border_01"
+             android:backgroundTint="#424C26"
+             android:gravity="center"
+             android:layout_marginEnd="5dp"
+             >
         <TextView
-            android:id="@+id/txtProceed"
+            android:id="@+id/txtContinue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="20dp"
-            android:text="Proceed"
+            android:text="Continue Shopping"
             android:gravity="center"
             android:textColor="@color/white"
             android:background="?android:attr/selectableItemBackground"
@@ -211,7 +224,33 @@
             android:textStyle="bold"
             android:fontFamily="sans-serif-condensed"
             />
+         </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="@drawable/border_01"
+                android:backgroundTint="#619A1F"
+                android:layout_marginStart="5dp"
+                >
+            <TextView
+                android:id="@+id/txtProceed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:text="Go to Cart"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="?android:attr/selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                />
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
         </LinearLayout>
         <ImageView

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CartActivity"
+    android:weightSum="1"
+    android:background="#E4E3FC"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:background="@drawable/toolbar_grad"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="Cart"
+        app:titleTextColor="@color/white"
+        >
+        <TextView
+            android:id="@+id/totalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:text="Total Amount: ₹"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingEnd="25dp"
+            android:textColor="@color/white"
+            />
+
+    </androidx.appcompat.widget.Toolbar>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclCart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".9"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:background="@drawable/border_01"
+        android:backgroundTint="#619A1F"
+        android:layout_margin="25dp"
+        >
+        <TextView
+            android:id="@+id/txtProceed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:text="Proceed To Buy"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:clickable="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            />
+    </LinearLayout>
+
+</LinearLayout>
