@@ -47,6 +47,7 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
         })
 
         binding.txtProceed.setOnClickListener {
+
             if(Util.isLogin()){
                 var dialog = Util.makeDialog(R.layout.item_order_finilise_dialog,this)
                 dialog.setCancelable(false)
@@ -60,8 +61,13 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                 var txtProceed = dialog.findViewById<TextView>(R.id.txtProceed)
                 var txtTotalPayable = dialog.findViewById<TextView>(R.id.txtTotalPayable)
                 txtTotalPayable.text = binding.totalPrice.text.toString().substring(14)
+
+                var pd = Util.showProgress(this,"Placing Order","Placing your order")
+                pd.setCancelable(false)
+
                 txtCancel.setOnClickListener {
                     dialog.cancel()
+                    pd.dismiss()
                 }
                 txtProceed.setOnClickListener {
                     Util.mToast(this,"placed")
@@ -85,14 +91,18 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                     else{
                         etLandmark.setError("Landmark can't be Empty",this.getDrawable(R.drawable.baseline_error_24))
                     }
+                    pd.show()
                 }
 
 
                 dialog.show();
 
+
+
             }
             else{
                 Util.mToast(this,"Please Consider Login/Sign up First.")
+
             }
         }
 
