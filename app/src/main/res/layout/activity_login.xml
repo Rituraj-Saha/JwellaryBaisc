@@ -29,19 +29,44 @@
             >
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:weightSum="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 >
                 <TextView
+                    android:id="@+id/btnLogin"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:layout_weight=".5"/>
+                    android:layout_weight=".5"
+                    android:text="LOGIN"
+                    android:gravity="center"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/border_02"
+                    />
+                <TextView
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight=".5"
+                    android:text="SIGN UP"
+                    android:gravity="center"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    />
 
 
             </LinearLayout>
 
             <FrameLayout
+                android:id="@+id/frmLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

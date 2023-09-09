@@ -28,10 +28,10 @@ object Util {
         Toast.makeText(activity.applicationContext,msg,Toast.LENGTH_LONG).show()
     }
 
-    fun callFragment(fragmentClass: Fragment?,supportFragmentManager: FragmentManager,frameId:Int) {
+    fun callFragmentWithoutStackTrace(fragmentClass: Fragment?, supportFragmentManager: FragmentManager, frameId:Int) {
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction().replace(frameId, fragmentClass!!)
-            .addToBackStack("adds").commit()
+            .commit()
 
     }
     fun showProgress(context: Context,title:String,msg:String):ProgressDialog{
