@@ -220,6 +220,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".MainActivity"
         app:layout_collapseMode="pin"
+        android:layout_marginBottom="50dp"
        >
        <RelativeLayout
            android:layout_width="match_parent"
@@ -299,7 +300,13 @@
         app:mbn_selectedIconColor="#3c415e"
         app:mbn_shadowColor="@color/colorAccent"
         />
-
+<ProgressBar
+    android:id="@+id/loadProgress"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:visibility="gone"
+    />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

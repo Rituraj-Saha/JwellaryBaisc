@@ -126,7 +126,8 @@ object Util {
 
     fun getToken(activity: Activity): String? {
         var sharedpreferences: SharedPreferences = activity.getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE)
-        return sharedpreferences.getString("token","");
+        var bearerToken = "Bearer "+sharedpreferences.getString("token","");
+        return bearerToken
     }
     fun getUser(activity: Activity):User{
         var sharedpreferences: SharedPreferences = activity.getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE)

@@ -4,15 +4,22 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -27,12 +34,21 @@ import com.techmasan.jwellarybaisc.adaptor.SliderAdapter
 import com.techmasan.jwellarybaisc.databinding.ActivityMainBinding
 import com.techmasan.jwellarybaisc.model.Grid1Home
 import com.techmasan.jwellarybaisc.model.SliderItemModel
+import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
 
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoadProductViewModel
 
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() ,AddToCartInterface{
     private lateinit var binding: ActivityMainBinding
     private val sliderHandler = Handler()
+    private val TAG ="MAIN_ACTIVITY"
+    private val loadProductViewModel: LoadProductViewModel by viewModels()
+    private var currentPageCount = 0;
+
     val run = object : Runnable {
         override fun run() {
             binding.viewPagerImageSlider.setCurrentItem(binding.viewPagerImageSlider.getCurrentItem() + 1);
@@ -163,7 +179,11 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 
         binding.recyclGrid.layoutManager = GridLayoutManager(context,2)
         binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,context,this,activity)
+
+        loadlNewProduct(currentPageCount)
+
     }
+
 
     override fun addToCart(cart: Cart) {
         viewModal.addCart(cart)
@@ -230,4 +250,28 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
                 +" isLogin:"+Util.isLogin(this)
                 +" User: "+Util.getUser(this))
     }
+
+
+
+   //wright the logic to call pagination
+    fun loadlNewProduct(curentPage:Int){
+       lifecycleScope.launch {
+           loadProductViewModel.loadNewProduct(curentPage,Util.getToken(this@MainActivity)!!);
+       }
+       loadProductViewModel.loadNewProductResponse.observe(this){
+           when(it){
+               is NetworkResult.Loading -> {
+                   binding.loadProgress.visibility = View.VISIBLE
+               }
+               is NetworkResult.Failure -> {
+                   binding.loadProgress.visibility = View.GONE
+               }
+               is  NetworkResult.Success -> {
+                   binding.loadProgress.visibility = View.GONE
+                    Log.d(TAG,it.data.toString())
+               }
+           }
+       }
+    }
+
 }
