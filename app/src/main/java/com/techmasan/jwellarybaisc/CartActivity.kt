@@ -48,7 +48,7 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
 
         binding.txtProceed.setOnClickListener {
 
-            if(Util.isLogin()){
+            if(Util.isLogin(this)){
                 var dialog = Util.makeDialog(R.layout.item_order_finilise_dialog,this)
                 dialog.setCancelable(false)
                 var etAddress = dialog.findViewById<EditText>(R.id.etAddress)

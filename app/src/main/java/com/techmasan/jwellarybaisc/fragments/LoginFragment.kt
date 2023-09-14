@@ -1,15 +1,24 @@
 package com.techmasan.jwellarybaisc.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.techmasan.jwellarybaisc.LoginActivity
 import com.techmasan.jwellarybaisc.R
 import com.techmasan.jwellarybaisc.Util
 import com.techmasan.jwellarybaisc.databinding.FragmentLoginBinding
+import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
+import com.techmasan.jwellarybaisc.networkConfig.data.OtpRequest
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.util.logging.Logger
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +30,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [LoginFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -35,6 +45,8 @@ class LoginFragment : Fragment() {
     }
 
     lateinit var binding: FragmentLoginBinding
+    private val loginViewModel: LoginViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,8 +55,33 @@ class LoginFragment : Fragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater)
         val view = binding.root
         binding.txtProceed.setOnClickListener {
-           var loginActivity = this.activity as LoginActivity
-            loginActivity.switchToOtpFragment()
+
+            Log.d("otp: ","About to call otp generator")
+            if(Util.phoneInputTextSizeCheck(binding.tiPhoneNumber,binding.phoneTextInputLayout,this.requireActivity())){
+                lifecycleScope.launch {
+                    var uPhone = binding.tiPhoneNumber.text.toString()
+                    loginViewModel.sendotpRequest(OtpRequest(uPhone));
+                }
+            }
+        }
+        loginViewModel.otpResponse.observe(this.requireActivity()){
+            when(it){
+                is NetworkResult.Loading -> {
+//                    binding.progressbar.isVisible = it.isLoading
+//                    Logger.log("userNetwork","in loading..")
+                    Log.d("otp: ","loading")
+                }
+
+                is NetworkResult.Failure -> {
+                    Log.e("otp: ",it.errorMessage)
+                    Util.mToast(this.activity as LoginActivity,"No Active User Found Please Consider sign up")
+                }
+                is  NetworkResult.Success -> {
+                   Log.d("otp: ",it.data.otp)
+                    var loginActivity = this.activity as LoginActivity
+                    loginActivity.switchToOtpFragment(binding.tiPhoneNumber.text.toString())
+                }
+            }
         }
         return view
     }

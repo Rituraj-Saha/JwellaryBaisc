@@ -23,9 +23,12 @@
            app:lottie_autoPlay="true"
            app:lottie_loop="true"/>
        <com.google.android.material.textfield.TextInputLayout
+           android:id="@+id/phoneTextInputLayout"
            android:layout_width="match_parent"
            android:layout_height="60dp"
-           android:layout_margin="@dimen/activity_horizontal_margin">
+           android:layout_margin="@dimen/activity_horizontal_margin"
+           app:errorEnabled="true"
+           >
 
            <com.google.android.material.textfield.TextInputEditText
                android:id="@+id/tiPhoneNumber"
@@ -33,6 +36,7 @@
                android:layout_height="wrap_content"
                android:hint="Phone Number(10 digit)"
                android:inputType="number"
+               android:focusableInTouchMode="true"
                />
 
        </com.google.android.material.textfield.TextInputLayout>

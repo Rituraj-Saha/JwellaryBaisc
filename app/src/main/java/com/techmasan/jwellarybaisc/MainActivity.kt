@@ -46,6 +46,8 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
         val view = binding.root
         setContentView(view)
 
+        getSessionInfo()
+
         viewPager2Implement()
         gridImpementation(this.applicationContext,this)
 
@@ -222,5 +224,10 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
                 }
             }
         })
+    }
+    fun getSessionInfo(){
+        Log.d("Session Info: ","token: "+Util.getToken(this)
+                +" isLogin:"+Util.isLogin(this)
+                +" User: "+Util.getUser(this))
     }
 }

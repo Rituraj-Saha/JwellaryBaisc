@@ -25,31 +25,35 @@
 
        <com.google.android.material.textfield.TextInputLayout
            android:layout_width="match_parent"
-           android:layout_height="60dp"
+           android:layout_height="70dp"
            android:layout_margin="@dimen/activity_horizontal_margin">
 
            <com.google.android.material.textfield.TextInputEditText
                android:id="@+id/tiName"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="Name"/>
+               android:hint="Name"
+               android:focusableInTouchMode="true"
+               />
 
        </com.google.android.material.textfield.TextInputLayout>
        <com.google.android.material.textfield.TextInputLayout
            android:layout_width="match_parent"
-           android:layout_height="60dp"
+           android:layout_height="70dp"
            android:layout_margin="@dimen/activity_horizontal_margin">
 
            <com.google.android.material.textfield.TextInputEditText
                android:id="@+id/tiEmail"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="email"/>
+               android:hint="email"
+               android:focusableInTouchMode="true"/>
 
        </com.google.android.material.textfield.TextInputLayout>
        <com.google.android.material.textfield.TextInputLayout
+           android:id="@+id/tinPhoneNumber"
            android:layout_width="match_parent"
-           android:layout_height="50dp"
+           android:layout_height="70dp"
            android:layout_margin="@dimen/activity_horizontal_margin">
 
            <com.google.android.material.textfield.TextInputEditText
@@ -58,24 +62,27 @@
                android:layout_height="wrap_content"
                android:hint="Phone Number(10 digit)"
                android:inputType="number"
+               android:focusableInTouchMode="true"
                />
 
        </com.google.android.material.textfield.TextInputLayout>
        <com.google.android.material.textfield.TextInputLayout
            android:layout_width="match_parent"
-           android:layout_height="60dp"
+           android:layout_height="wrap_content"
+           android:minHeight="70dp"
            android:layout_margin="@dimen/activity_horizontal_margin">
 
            <com.google.android.material.textfield.TextInputEditText
                android:id="@+id/tiAddressLine"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="addressLine"/>
+               android:hint="addressLine"
+               android:focusableInTouchMode="true"/>
 
        </com.google.android.material.textfield.TextInputLayout>
        <com.google.android.material.textfield.TextInputLayout
            android:layout_width="match_parent"
-           android:layout_height="60dp"
+           android:layout_height="70dp"
            android:layout_margin="@dimen/activity_horizontal_margin">
 
            <com.google.android.material.textfield.TextInputEditText
@@ -83,19 +90,21 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:inputType="number"
-               android:hint="pinCode"/>
+               android:hint="pinCode"
+               android:focusableInTouchMode="true"/>
 
        </com.google.android.material.textfield.TextInputLayout>
        <com.google.android.material.textfield.TextInputLayout
            android:layout_width="match_parent"
-           android:layout_height="60dp"
+           android:layout_height="70dp"
            android:layout_margin="@dimen/activity_horizontal_margin">
 
            <com.google.android.material.textfield.TextInputEditText
                android:id="@+id/tiState"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="state"/>
+               android:hint="state"
+               android:focusableInTouchMode="true"/>
 
        </com.google.android.material.textfield.TextInputLayout>
 

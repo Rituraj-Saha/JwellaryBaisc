@@ -1,15 +1,26 @@
 package com.techmasan.jwellarybaisc.fragments
 
-import android.content.Intent
+import android.app.ProgressDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.techmasan.jwellarybaisc.LoginActivity
-import com.techmasan.jwellarybaisc.MainActivity
-import com.techmasan.jwellarybaisc.R
+import com.techmasan.jwellarybaisc.Util
 import com.techmasan.jwellarybaisc.databinding.FragmentOtpBinding
+import com.techmasan.jwellarybaisc.networkConfig.data.GenerateTokenRequest
+import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
+import com.techmasan.jwellarybaisc.networkConfig.data.OtpRequest
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.GenerateTokenViewModel
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,19 +32,23 @@ private const val ARG_PARAM2 = "param2"
  * Use the [OtpFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class OtpFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var phoneNumber: String? = null
     private var param2: String? = null
-
+    ;lateinit var progress:ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
+            phoneNumber = it.getString("phoneNumber")
             param2 = it.getString(ARG_PARAM2)
         }
+        progress = Util.showProgress(this.requireContext(),"OTP Validation","Otp validation on progess")
+
     }
     lateinit var binding: FragmentOtpBinding
+    private val tokenViewModel: GenerateTokenViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,9 +56,64 @@ class OtpFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentOtpBinding.inflate(layoutInflater)
         var view = binding.root
+        Util.mToast(this.requireActivity(),"Check this Phone Number For OTP: "+phoneNumber!!)
         binding.txtProceed.setOnClickListener {
-           var loginActivity = this.activity as LoginActivity
-            loginActivity.switchToMaiinActivity()
+
+            object : CountDownTimer(30000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    binding.txtCountDownTimer.setText("seconds remaining: " + millisUntilFinished / 1000)
+                    // logic to set the EditText could go here
+                }
+
+                override fun onFinish() {
+                    binding.txtButtonResendOtp.visibility = View.VISIBLE
+
+                }
+            }.start()
+            //call for token Generation
+            lifecycleScope.launch {
+                Log.d("phoneNumberFromOtp: ","phoneis: "+phoneNumber!!)
+                tokenViewModel.sendTokenRequest(GenerateTokenRequest(phoneNumber!!,binding.tiOtp.text.toString()));
+            }
+        }
+        tokenViewModel.generateTokenResponse.observe(this.requireActivity()){
+
+            when(it){
+
+                is NetworkResult.Loading -> {
+//                    binding.progressbar.isVisible = it.isLoading
+//                    Logger.log("userNetwork","in loading..")
+                    Log.d("otp: ","loading")
+                    progress.show()
+                }
+                is NetworkResult.Failure -> {
+                    progress.cancel()
+                    Util.mToast(this.requireActivity(),"Validation Failed")
+                }
+                is  NetworkResult.Success -> {
+                    Util.sessionManager(this.requireActivity(),true,it.data.token,it.data.user)
+                    progress.cancel()
+                    var loginActivity = this.activity as LoginActivity
+                    loginActivity.switchToMaiinActivity()
+                }
+            }
+        }
+        binding.txtButtonResendOtp.setOnClickListener {
+            var loginActivity = this.activity as LoginActivity
+            loginActivity.requestOTP(phoneNumber!!)
+            binding.txtButtonResendOtp.visibility = View.INVISIBLE
+            object : CountDownTimer(30000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    binding.txtCountDownTimer.setText("seconds remaining: " + millisUntilFinished / 1000)
+                    // logic to set the EditText could go here
+                }
+
+                override fun onFinish() {
+                    binding.txtButtonResendOtp.visibility = View.VISIBLE
+
+                }
+            }.start()
+
         }
         return view
     }

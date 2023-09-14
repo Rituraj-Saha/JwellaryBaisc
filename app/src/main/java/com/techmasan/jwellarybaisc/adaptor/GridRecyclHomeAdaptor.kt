@@ -135,7 +135,7 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
                     Util.mToast(activity, "Quantity is empty")
                 }
                 else{
-                if (Util.isLogin()) {
+                if (Util.isLogin(activity)) {
                     val sdf = SimpleDateFormat("dd MMM, yyyy - HH:mm")
                     val currentDateAndTime: String = sdf.format(Date())
                     Log.d("roomlist","about to call addCart")
