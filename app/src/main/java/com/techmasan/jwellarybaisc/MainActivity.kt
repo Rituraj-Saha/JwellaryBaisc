@@ -1,5 +1,6 @@
 package com.techmasan.jwellarybaisc
 
+
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -7,19 +8,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -35,11 +32,10 @@ import com.techmasan.jwellarybaisc.databinding.ActivityMainBinding
 import com.techmasan.jwellarybaisc.model.Grid1Home
 import com.techmasan.jwellarybaisc.model.SliderItemModel
 import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
-
 import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoadProductViewModel
-
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() ,AddToCartInterface{
@@ -48,6 +44,9 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
     private val TAG ="MAIN_ACTIVITY"
     private val loadProductViewModel: LoadProductViewModel by viewModels()
     private var currentPageCount = 0;
+    private var noMoreDataFlag = false
+
+    var grid1HomeList = ArrayList<Grid1Home>()
 
     val run = object : Runnable {
         override fun run() {
@@ -121,7 +120,7 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
         sliderItems.add(SliderItemModel(imageUri.toString()))
         sliderItems.add(SliderItemModel(imageUri2.toString()))
         sliderItems.add(SliderItemModel(imageUri.toString()))
-        binding.viewPagerImageSlider.adapter = SliderAdapter(sliderItems,binding.viewPagerImageSlider)
+        binding.viewPagerImageSlider.adapter = SliderAdapter(sliderItems,binding.viewPagerImageSlider,this)
 
         binding.viewPagerImageSlider.setClipToPadding(false);
         binding.viewPagerImageSlider.setClipChildren(false);
@@ -154,33 +153,32 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
     }
 
     fun gridImpementation(context: Context,activity:MainActivity){
-        var grid1HomeList = ArrayList<Grid1Home>()
-        var imageUri2 = (Uri.Builder())
-            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority(resources.getResourcePackageName(R.drawable.jwel))
-            .appendPath(resources.getResourceTypeName(R.drawable.jwel))
-            .appendPath(resources.getResourceEntryName(R.drawable.jwel))
-            .build()
 
-        var imageList = ArrayList<String>()
-        imageList.add(imageUri2.toString())
-        imageList.add(imageUri2.toString())
-        imageList.add(imageUri2.toString())
-
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
-        grid1HomeList.add(Grid1Home(1,imageUri2.toString(),"\u20B9 100","0","Neckless",imageList))
 
         binding.recyclGrid.layoutManager = GridLayoutManager(context,2)
         binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,context,this,activity)
 
-        loadlNewProduct(currentPageCount)
+        loadNewProduct(currentPageCount)
+
+
+        val scroller = binding.lvlMainhome
+
+        scroller?.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                Log.i(TAG, "Scroll DOWN: "+scrollY+" V.meauserdHeight: "+v.measuredHeight+" v.getChildAt(0).measuredHeight: "+v.getChildAt(0).measuredHeight)
+
+            }
+            if (scrollY < oldScrollY) {
+                Log.i(TAG, "Scroll UP")
+            }
+            if (scrollY == 0) {
+                Log.i(TAG, "TOP SCROLL")
+            }
+            if (scrollY == (v.getChildAt(0).measuredHeight - v.measuredHeight)) {
+//                Log.i(TAG, "BOTTOM SCROLL: "+scrollY)
+                loadNewProduct(++currentPageCount)
+            }
+        })
 
     }
 
@@ -254,23 +252,46 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 
 
    //wright the logic to call pagination
-    fun loadlNewProduct(curentPage:Int){
-       lifecycleScope.launch {
-           loadProductViewModel.loadNewProduct(curentPage,Util.getToken(this@MainActivity)!!);
-       }
-       loadProductViewModel.loadNewProductResponse.observe(this){
-           when(it){
-               is NetworkResult.Loading -> {
-                   binding.loadProgress.visibility = View.VISIBLE
-               }
-               is NetworkResult.Failure -> {
-                   binding.loadProgress.visibility = View.GONE
-               }
-               is  NetworkResult.Success -> {
-                   binding.loadProgress.visibility = View.GONE
-                    Log.d(TAG,it.data.toString())
+    fun loadNewProduct(curentPage:Int){
+       if(!noMoreDataFlag){
+           lifecycleScope.launch {
+               loadProductViewModel.loadNewProduct(curentPage,Util.getToken(this@MainActivity)!!);
+           }
+           loadProductViewModel.loadNewProductResponse.observe(this){
+               when(it){
+                   is NetworkResult.Loading -> {
+                       binding.loadProgress.visibility = View.VISIBLE
+                   }
+                   is NetworkResult.Failure -> {
+                       binding.loadProgress.visibility = View.GONE
+                   }
+                   is  NetworkResult.Success -> {
+                       binding.loadProgress.visibility = View.GONE
+                       if(it.data.isEmpty()){
+                           noMoreDataFlag = true
+                           Util.mToast(this,"That's All for now !!")
+                       }
+                       else{
+
+                           for(i in it.data){
+                               var imageList = i.imageList.split(",").toMutableList()
+                               for(x in 0..imageList.size-1){
+                                  imageList[x] = imageList.get(x).replace("localhost","192.168.0.165")
+                               }
+
+                               grid1HomeList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),"0",i.pname, imageList))
+
+                           }
+
+                           binding.recyclGrid.adapter!!.notifyItemInserted(binding.recyclGrid.adapter!!.itemCount)
+
+
+                       }
+                       Log.d(TAG,it.data.toString())
+                   }
                }
            }
+
        }
     }
 

@@ -25,9 +25,7 @@ var basePrice:Double,
     @SerializedName("discount")
     @Expose
 var discount:Double ,
-    @SerializedName("costPrice")
-    @Expose
-var costPrice:Double ,
+
     @SerializedName("sellPrice")
     @Expose
 var sellPrice:Double

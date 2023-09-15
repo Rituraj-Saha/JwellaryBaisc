@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+
 import com.techmasan.jwellarybaisc.Entity.Cart
 import com.techmasan.jwellarybaisc.R
 
@@ -44,7 +45,8 @@ class CartAdapter(val context: Context,
             totalPrce = totalPrce + i.price;
         }
         totalCount.text = "Total Amount: \u20B9"+totalPrce
-        Picasso.get().load(data.image).into(holder.imgCart)
+//        Picasso.get().load(data.image).into(holder.imgCart)
+        Glide.with(context).load(data.image).into(holder.imgCart)
         holder.txtName.text = "Product Name: "+data.pname
         holder.txtId.text = "Product ID: "+data.pid.toString()
         holder.txtPrice.text = "Total Price: \u20B9"+data.price.toString()

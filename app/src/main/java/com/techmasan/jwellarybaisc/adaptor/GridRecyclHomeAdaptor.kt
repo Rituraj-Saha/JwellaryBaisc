@@ -3,7 +3,6 @@ package com.techmasan.jwellarybaisc.adaptor
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +10,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+
 import com.techmasan.jwellarybaisc.CartActivity
 import com.techmasan.jwellarybaisc.Entity.Cart
 import com.techmasan.jwellarybaisc.R
 import com.techmasan.jwellarybaisc.Util
-
 import com.techmasan.jwellarybaisc.model.Grid1Home
+import okhttp3.OkHttpClient
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -48,7 +47,12 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        var data = mList[position]
-        Picasso.get().load(data.image).into(holder.imgGrid);
+        Log.d("imageGrid: ",data.image)
+
+//        Picasso.get().load(data.image).into(holder.imgGrid);
+
+        Glide.with(holder.imgGrid.context).load(data.image).into(holder.imgGrid)
+
         holder.txtTitle.text = data.title
         holder.txtPrice.text = data.price
         holder.txtShowDetails.setOnClickListener {

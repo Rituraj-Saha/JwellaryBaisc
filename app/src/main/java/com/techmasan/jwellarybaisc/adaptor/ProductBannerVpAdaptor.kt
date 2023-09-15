@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+
 import com.techmasan.jwellarybaisc.R
 
 
@@ -35,7 +36,8 @@ class ProductBannerVpAdaptor(var context: Context,var images:List<String>): Page
 //            .appendPath(context.resources.getResourceTypeName(R.drawable.banner))
 //            .appendPath(context.resources.getResourceEntryName(R.drawable.banner))
 //            .build()
-        Picasso.get().load(images[position]).into(vpimageView);
+//        Picasso.get().load(images[position]).into(vpimageView);
+        Glide.with(context).load(images[position]).into(vpimageView)
         var vp = container as ViewPager
         vp.addView(view,0)
         return view
