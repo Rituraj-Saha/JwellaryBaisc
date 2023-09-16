@@ -8,12 +8,18 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
+import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
 import com.techmasan.jwellarybaisc.networkConfig.data.User
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.TokenExpireViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 object Util {
@@ -143,7 +149,6 @@ object Util {
         editor.remove("user")
         editor.putBoolean("isLogin",false);
     }
-
 
 
 }

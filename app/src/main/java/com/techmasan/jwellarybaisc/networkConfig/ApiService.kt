@@ -33,4 +33,7 @@ interface ApiService {
     @GET("/product/get-product")
     suspend fun loadProduct(@Query("pageNo") pageNo:Int, @Header("Authorization")token:String) : List<RetrivedProduct>
 
+    @Headers("Content-type: application/json")
+    @POST("/auth/generateToken/tokenExpireCheck")
+    suspend fun chekTokenExpire(@Body token: String):Boolean
 }

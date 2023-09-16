@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
     private var currentPageCount = 0;
     private var noMoreDataFlag = false
 
-    var grid1HomeList = ArrayList<Grid1Home>()
+
 
     val run = object : Runnable {
         override fun run() {
@@ -156,7 +156,6 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 
 
         binding.recyclGrid.layoutManager = GridLayoutManager(context,2)
-        binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,context,this,activity)
 
         loadNewProduct(currentPageCount)
 
@@ -176,7 +175,8 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
             }
             if (scrollY == (v.getChildAt(0).measuredHeight - v.measuredHeight)) {
 //                Log.i(TAG, "BOTTOM SCROLL: "+scrollY)
-                loadNewProduct(++currentPageCount)
+                if(!noMoreDataFlag)
+                    loadNewProduct(++currentPageCount)
             }
         })
 
@@ -253,6 +253,10 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 
    //wright the logic to call pagination
     fun loadNewProduct(curentPage:Int){
+       Log.d("cpage: ",curentPage.toString())
+       var grid1HomeList = ArrayList<Grid1Home>()
+       binding.recyclGrid.adapter = GridRecyclHomeAdaptor(grid1HomeList,this,this,this)
+
        if(!noMoreDataFlag){
            lifecycleScope.launch {
                loadProductViewModel.loadNewProduct(curentPage,Util.getToken(this@MainActivity)!!);
@@ -272,26 +276,32 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
                            Util.mToast(this,"That's All for now !!")
                        }
                        else{
-
+                           var grid1TempList: ArrayList<Grid1Home> = ArrayList()
                            for(i in it.data){
                                var imageList = i.imageList.split(",").toMutableList()
                                for(x in 0..imageList.size-1){
                                   imageList[x] = imageList.get(x).replace("localhost","192.168.0.165")
                                }
-
-                               grid1HomeList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),"0",i.pname, imageList))
+                                grid1TempList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),i.discount.toString()+"% Off","\u20B9 "+i.sellPrice.toString(),"0",i.pname,i.description, imageList))
 
                            }
 
-                           binding.recyclGrid.adapter!!.notifyItemInserted(binding.recyclGrid.adapter!!.itemCount)
+
+                           grid1HomeList.addAll(grid1TempList)
+                           Log.d("grid1List",grid1HomeList.toString())
+
 
 
                        }
                        Log.d(TAG,it.data.toString())
+                       binding.recyclGrid.adapter!!.notifyItemInserted(binding.recyclGrid.adapter!!.itemCount)
                    }
                }
            }
 
+       }
+       else{
+           return
        }
     }
 

@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide
 
 import com.techmasan.jwellarybaisc.CartActivity
 import com.techmasan.jwellarybaisc.Entity.Cart
+import com.techmasan.jwellarybaisc.LoginActivity
+import com.techmasan.jwellarybaisc.MainActivity
 import com.techmasan.jwellarybaisc.R
 import com.techmasan.jwellarybaisc.Util
 import com.techmasan.jwellarybaisc.model.Grid1Home
@@ -32,7 +34,8 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
         var txtTitle:TextView = itemView.findViewById(R.id.txtTitle)
         var txtPrice:TextView = itemView.findViewById(R.id.txtPrice)
         var txtShowDetails:TextView = itemView.findViewById(R.id.txtShowDetails)
-
+        var txtDiscount:TextView = itemView.findViewById(R.id.txtDiscount)
+        var txtActualPrice:TextView = itemView.findViewById(R.id.txtActualPrice)
 
     }
 
@@ -55,6 +58,9 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
 
         holder.txtTitle.text = data.title
         holder.txtPrice.text = data.price
+        holder.txtDiscount.text = data.discount
+        holder.txtActualPrice.text = data.actualPrice
+
         holder.txtShowDetails.setOnClickListener {
             var dialog = Util.makeDialog(R.layout.item_product_dialog, activity)
             var imgClose: ImageView = dialog.findViewById(R.id.imgClose)
@@ -114,6 +120,22 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
             var txtPlus: TextView = dialog.findViewById(R.id.txtPlus)
             var linCart: LinearLayout = dialog.findViewById(R.id.linCart)
             var txtPrice: TextView = dialog.findViewById(R.id.txtPrice)
+
+
+            var txtProductName:TextView = dialog.findViewById(R.id.txtProductName)
+            var txtDesc:TextView = dialog.findViewById(R.id.txtDesc)
+            var txtBasePrice:TextView = dialog.findViewById(R.id.txtBasePrice)
+            var txtDialogPrice:TextView = dialog.findViewById(R.id.txtPrice)
+            var discountTxt:TextView = dialog.findViewById(R.id.saveTxt)
+
+            txtProductName.text = data.title
+            txtDesc.text = data.desc
+            txtBasePrice.text = data.price
+            txtDialogPrice.text = data.actualPrice
+            discountTxt.text = data.discount
+
+
+
             txtAddCart.setOnClickListener {
                 txtQty.text = "1"
                 linQtySetter.visibility = View.VISIBLE
@@ -133,6 +155,8 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
             }
 
             var txtProceed: TextView = dialog.findViewById(R.id.txtProceed)
+
+
 
             txtProceed.setOnClickListener {
                 if (txtQty.text.toString().equals("")||Integer.parseInt(txtQty.text.toString())<=0) {
@@ -171,12 +195,63 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
                     activity.startActivity(intent)
 
                 } else {
-                    Util.mToast(activity, "REDIRECT to LOGIN PAGE")
+                    var intent = Intent(activity,LoginActivity::class.java)
+                    activity.startActivity(intent)
+                    activity.finish()
                 }
                 }
             }
+            var txtContinue:TextView = dialog.findViewById(R.id.txtContinue)
 
+            txtContinue.setOnClickListener {
+                if (txtQty.text.toString()
+                        .equals("") || Integer.parseInt(txtQty.text.toString()) <= 0
+                ) {
+                    var intent = Intent(activity, MainActivity::class.java)
+                    activity.startActivity(intent)
+                    activity.finish()
+                } else {
+                    if (Util.isLogin(activity)) {
+                        val sdf = SimpleDateFormat("dd MMM, yyyy - HH:mm")
+                        val currentDateAndTime: String = sdf.format(Date())
+                        Log.d("roomlist", "about to call addCart")
 
+                        try {
+
+                            val totalPrice: Double = txtQty.text.toString().toDouble() *
+                                    txtPrice.text.toString().substring(1).toDouble()
+                            Log.d(
+                                "roomlist",
+                                "about to call addCart" + "pid: " + data.pid + ", Date: " +
+                                        currentDateAndTime + ", qty: " + Integer.parseInt(txtQty.text.toString()) + ",price: " + totalPrice
+                            )
+                            var cart = Cart(
+                                data.pid,
+                                data.title,
+                                data.image,
+                                currentDateAndTime,
+                                Integer.parseInt(txtQty.text.toString()),
+                                totalPrice
+                            )
+
+                            addToCartInterface.addToCart(cart)
+                        } catch (e: Exception) {
+                            Log.e("roomlist", "about to call addCart" + e.message)
+                        }
+
+                        dialog.dismiss()
+
+                        var intent = Intent(activity, MainActivity::class.java)
+                        activity.startActivity(intent)
+                        activity.finish()
+
+                    } else {
+                        var intent = Intent(activity, LoginActivity::class.java)
+                        activity.startActivity(intent)
+                        activity.finish()
+                    }
+                }
+            }
             dialog.show()
         }
 
