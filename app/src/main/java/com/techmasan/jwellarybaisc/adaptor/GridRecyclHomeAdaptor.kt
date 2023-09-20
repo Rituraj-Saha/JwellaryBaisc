@@ -142,7 +142,10 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
                 linCart.visibility = View.GONE
             }
             txtPlus.setOnClickListener {
-                txtQty.text = (Integer.parseInt(txtQty.text.toString()) + 1).toString()
+                if(data.stockQty > Integer.parseInt(txtQty.text.toString()))
+                    txtQty.text = (Integer.parseInt(txtQty.text.toString()) + 1).toString()
+                else
+                    Util.mToast(activity,"Max Stock Reached..")
             }
             txtMinus.setOnClickListener {
                 var tempQty = Integer.parseInt(txtQty.text.toString()) - 1

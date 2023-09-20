@@ -10,6 +10,7 @@ data class Grid1Home (
     var title:String,
     var desc: String,
     var imageList:List<String>,
+    var stockQty:Int
 
 
 )

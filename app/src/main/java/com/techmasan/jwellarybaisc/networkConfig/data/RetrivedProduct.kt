@@ -28,5 +28,9 @@ var discount:Double ,
 
     @SerializedName("sellPrice")
     @Expose
-var sellPrice:Double
+var sellPrice:Double,
+
+    @SerializedName("stockQty")
+@Expose
+var stockQty:Int
     )

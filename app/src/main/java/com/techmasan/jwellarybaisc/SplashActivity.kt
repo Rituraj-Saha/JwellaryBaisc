@@ -43,7 +43,7 @@ class SplashActivity : AppCompatActivity() {
                 if(Util.getToken(this@SplashActivity)!=null &&
                     !Util.getToken(this@SplashActivity).equals("")){
                     Log.d(TAG,"in side token")
-                    tokenExpireViewModel.chekTokenExpire(Util.getToken(this@SplashActivity)!!)
+                    tokenExpireViewModel.chekTokenExpire(Util.getToken(this@SplashActivity)!!.replace("Bearer ",""))
                     tokenExpireViewModel.tokenExpireResponse.observe(this@SplashActivity){
                         when(it){
                             is NetworkResult.Loading -> {
@@ -56,6 +56,11 @@ class SplashActivity : AppCompatActivity() {
                                 Log.d(TAG,"Success "+it.data)
                                 if(it.data){
                                     val i = Intent(this@SplashActivity, MainActivity::class.java)
+                                    startActivity(i)
+                                    finish()
+                                }
+                                else{
+                                    val i = Intent(this@SplashActivity, LoginActivity::class.java)
                                     startActivity(i)
                                     finish()
                                 }
