@@ -4,8 +4,11 @@ import com.techmasan.jwellarybaisc.Util
 import com.techmasan.jwellarybaisc.model.Grid1Home
 import com.techmasan.jwellarybaisc.networkConfig.data.GenerateTokenRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.GenerateTokenResponse
+import com.techmasan.jwellarybaisc.networkConfig.data.OrderRequest
+import com.techmasan.jwellarybaisc.networkConfig.data.OrderResponse
 import com.techmasan.jwellarybaisc.networkConfig.data.OtpRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.OtpResponse
+import com.techmasan.jwellarybaisc.networkConfig.data.ProductRequestForOrder
 import com.techmasan.jwellarybaisc.networkConfig.data.RetrivedProduct
 import com.techmasan.jwellarybaisc.networkConfig.data.User
 import retrofit2.http.Body
@@ -32,6 +35,12 @@ interface ApiService {
     @Headers("Content-type: application/json")
     @GET("/product/get-product")
     suspend fun loadProduct(@Query("pageNo") pageNo:Int, @Header("Authorization")token:String) : List<RetrivedProduct>
+
+
+    @Headers("Content-type: application/json")
+    @POST("/api/order/place-order")
+    suspend fun placeOrder(@Body orderRequest:OrderRequest, @Header("Authorization")token:String) : OrderResponse
+
 
     @Headers("Content-type: application/json")
     @POST("/auth/generateToken/tokenExpireCheck")
