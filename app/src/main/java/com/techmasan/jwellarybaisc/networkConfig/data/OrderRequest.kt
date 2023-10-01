@@ -22,5 +22,13 @@ data class OrderRequest(
 
     @SerializedName("email")
     @Expose
-    var email:String
+    var email:String,
+
+    @SerializedName("paymentMethod")
+    @Expose
+    var paymentMethod:String,
+
+    @SerializedName("paymentStatus")
+    @Expose
+    var paymentStatus:String
 )

@@ -222,14 +222,10 @@
         app:layout_collapseMode="pin"
         android:layout_marginBottom="50dp"
        >
+
        <RelativeLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent">
-
-           <FrameLayout
-               android:id="@+id/frameContainer"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -286,6 +282,11 @@
 
        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
+    <FrameLayout
+        android:id="@+id/frameContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
     <com.etebarian.meowbottomnavigation.MeowBottomNavigation
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"

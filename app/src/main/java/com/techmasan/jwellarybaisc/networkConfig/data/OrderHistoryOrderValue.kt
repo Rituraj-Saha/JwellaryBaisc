@@ -1,6 +1,6 @@
 package com.techmasan.jwellarybaisc.networkConfig.data
 
-data class ProductRequestForOrder(
+data class OrderHistoryOrderValue(
     var pid:Long,
     var pname:String,
     var thumbnail:String,

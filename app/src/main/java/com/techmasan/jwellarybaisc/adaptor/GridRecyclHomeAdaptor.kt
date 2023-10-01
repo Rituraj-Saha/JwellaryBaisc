@@ -183,7 +183,10 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
                                 data.image,
                                 currentDateAndTime,
                                 Integer.parseInt(txtQty.text.toString()),
-                                totalPrice
+                                totalPrice,
+                                data.actualPrice.substring(1).toDouble(),
+                                data.discount.replace("% Off","").toDouble(),
+                                txtPrice.text.toString().substring(1).toDouble()
                             )
 
                             addToCartInterface.addToCart(cart)
@@ -234,7 +237,10 @@ class GridRecyclHomeAdaptor(var mList:List<Grid1Home>, var context: Context,var 
                                 data.image,
                                 currentDateAndTime,
                                 Integer.parseInt(txtQty.text.toString()),
-                                totalPrice
+                                totalPrice,
+                                data.actualPrice.substring(1).toDouble(),
+                                data.discount.replace("% Off","").toDouble(),
+                                txtPrice.text.toString().substring(1).toDouble()
                             )
 
                             addToCartInterface.addToCart(cart)

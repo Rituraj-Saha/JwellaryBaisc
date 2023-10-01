@@ -2,25 +2,37 @@ package com.techmasan.jwellarybaisc
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.techmasan.jwellarybaisc.Entity.Cart
 import com.techmasan.jwellarybaisc.RoomViewModel.CartViewModel
 import com.techmasan.jwellarybaisc.adaptor.CartAdapter
 import com.techmasan.jwellarybaisc.adaptor.CartClickDeleteInterface
 import com.techmasan.jwellarybaisc.databinding.ActivityCartBinding
+import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
+import com.techmasan.jwellarybaisc.networkConfig.data.OrderRequest
+import com.techmasan.jwellarybaisc.networkConfig.data.ProductRequestForOrder
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoadProductViewModel
+import com.techmasan.jwellarybaisc.networkConfig.viewModels.OrderViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
     lateinit var viewModal: CartViewModel
     private lateinit var binding: ActivityCartBinding
+    private val orderViewModel: OrderViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,11 +57,12 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                 cartAdaptor.updateList(it)
             }
         })
-
+        var pd = Util.showProgress(this,"Placing Order","Placing your order")
+        var dialog = Util.makeDialog(R.layout.item_order_finilise_dialog,this)
         binding.txtProceed.setOnClickListener {
 
             if(Util.isLogin(this)){
-                var dialog = Util.makeDialog(R.layout.item_order_finilise_dialog,this)
+
                 dialog.setCancelable(false)
                 var etAddress = dialog.findViewById<EditText>(R.id.tiAddressLine)
                 var etPin = dialog.findViewById<EditText>(R.id.tipincode)
@@ -85,7 +98,6 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                 })
 
 
-                var pd = Util.showProgress(this,"Placing Order","Placing your order")
 
 
                 txtCancel.setOnClickListener {
@@ -93,9 +105,21 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                     pd.dismiss()
                 }
                 txtProceed.setOnClickListener {
-                    Util.mToast(this,"placed")
+                    lifecycleScope.launch {
+                        var cartList = cartAdaptor.getCartList()
+                        var productRequestList = ArrayList<ProductRequestForOrder>()
+                        for(i in cartList){
+                            var productRequestForOrder:ProductRequestForOrder = ProductRequestForOrder(i.pid,i.pname,i.image,i.basePrice,i.discount,i.sellPrice,i.qty)
+                            productRequestList.add(productRequestForOrder)
+                        }
 
-                    pd.show()
+
+                        var orderRequest:OrderRequest = OrderRequest(Util.getUser(this@CartActivity).phoneNumber,productRequestList,binding.totalPrice.text.toString().substring(15).toDouble(),etAddress.text.toString(),Util.getUser(this@CartActivity).email,paymentType,"NP")
+                        //check wheteher token is present and not expired and user is loged in
+                        orderViewModel.sendOrderRequest(orderRequest,Util.getToken(this@CartActivity)!!);
+
+                    }
+
                 }
 
                 dialog.show();
@@ -107,6 +131,29 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                 finish()
             }
         }
+        orderViewModel.orderResponse.observe(this){
+            when(it){
+                is NetworkResult.Loading ->{
+                    pd.show()
+                }
+                is NetworkResult.Success ->{
+                    Log.d("OrderPlace:","Success")
+                   Util.mToast(this@CartActivity,"Order Placed Successfully")
+                    pd.dismiss()
+                    dialog.dismiss()
+                    for(i in cartAdaptor.getCartList()){
+                        onDeleteIconClick(i);
+
+                    }
+                    cartAdaptor.notifyDataSetChanged()
+
+                }
+                is NetworkResult.Failure ->{
+                 Log.d("OrderPlace",""+it.errorMessage)
+                }
+            }
+        }
+
 
 
 

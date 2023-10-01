@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +30,7 @@ import com.techmasan.jwellarybaisc.adaptor.AddToCartInterface
 import com.techmasan.jwellarybaisc.adaptor.GridRecyclHomeAdaptor
 import com.techmasan.jwellarybaisc.adaptor.SliderAdapter
 import com.techmasan.jwellarybaisc.databinding.ActivityMainBinding
+import com.techmasan.jwellarybaisc.fragments.OrderHistoryFragment
 import com.techmasan.jwellarybaisc.model.Grid1Home
 import com.techmasan.jwellarybaisc.model.SliderItemModel
 import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
@@ -70,6 +72,31 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
         binding.bottomNav.add(MeowBottomNavigation.Model(2,R.drawable.baseline_home_24))
         binding.bottomNav.add(MeowBottomNavigation.Model(3,R.drawable.baseline_person_24))
         binding.bottomNav.show(2)
+        binding.bottomNav.setOnClickMenuListener {
+            var selected = it.id
+            var currentFragment = supportFragmentManager.fragments.lastOrNull()
+            when(selected){
+                1 ->{
+                    if(currentFragment!=null){
+                        val fragmentManager = supportFragmentManager
+                        fragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
+
+                    }
+
+                    Util.callFragmentWithoutStackTrace(OrderHistoryFragment(),supportFragmentManager,binding.frameContainer.id)
+
+                }
+                2->{
+                    if(currentFragment!=null){
+                        val fragmentManager = supportFragmentManager
+                        fragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
+                    }
+                }
+                3->{
+                    Util.mToast(this,"Profile should open")
+                }
+            }
+        }
 
 
         viewModal = ViewModelProvider(

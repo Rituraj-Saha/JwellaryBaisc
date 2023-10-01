@@ -72,6 +72,10 @@ class CartAdapter(val context: Context,
         // change method to notify our adapter.
         notifyDataSetChanged()
     }
+
+    fun getCartList():List<Cart> {
+        return allCarts
+    }
 }
 interface CartClickDeleteInterface {
     // creating a method for click

@@ -51,6 +51,10 @@ class SplashActivity : AppCompatActivity() {
                             }
                             is NetworkResult.Failure -> {
                                 Log.d(TAG,it.errorMessage)
+                                Util.mToast(this@SplashActivity,it.errorMessage)
+                                val i = Intent(this@SplashActivity, LoginActivity::class.java)
+                                startActivity(i)
+                                finish()
                             }
                             is  NetworkResult.Success -> {
                                 Log.d(TAG,"Success "+it.data)

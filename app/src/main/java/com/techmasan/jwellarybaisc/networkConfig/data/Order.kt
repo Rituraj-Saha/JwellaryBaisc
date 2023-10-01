@@ -13,7 +13,7 @@ data class Order(
     var phoneNumber:String,
     @SerializedName("orderValue")
     @Expose
-    var orderValue:List<ProductRequestForOrder>,
+    var orderValue:String,
     @SerializedName("totalPrice")
     @Expose
     var totalPrice:Double,
@@ -31,5 +31,11 @@ data class Order(
     var status:String,
     @SerializedName("feedback")
     @Expose
-    var feedback:String?
+    var feedback:String?,
+    @SerializedName("paymentMethod")
+    @Expose
+    var paymentMethod:String,
+    @SerializedName("paymentStatus")
+    @Expose
+    var paymentStatus:String?
 )
