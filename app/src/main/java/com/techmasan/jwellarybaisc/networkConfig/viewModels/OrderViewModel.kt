@@ -8,6 +8,7 @@ import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
 import com.techmasan.jwellarybaisc.networkConfig.data.OrderRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.OrderResponse
 import com.techmasan.jwellarybaisc.networkConfig.data.OtpRequest
+import com.techmasan.jwellarybaisc.networkConfig.data.UpiConfig
 
 import com.techmasan.jwellarybaisc.networkConfig.repositories.OrderRequestRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,18 @@ class OrderViewModel @Inject constructor(
         viewModelScope.launch {
             orderRequestRepository.placeOrderRequest(orderRequest,token).collect {
                 _orderResponse.postValue(it)
+            }
+        }
+    }
+
+
+
+    private var _upiResponse = MutableLiveData<NetworkResult<UpiConfig>>()
+    val upiResponse: LiveData<NetworkResult<UpiConfig>> = _upiResponse
+    suspend fun requestUpi() {
+        viewModelScope.launch {
+            orderRequestRepository.requestUpi().collect {
+                _upiResponse.postValue(it)
             }
         }
     }

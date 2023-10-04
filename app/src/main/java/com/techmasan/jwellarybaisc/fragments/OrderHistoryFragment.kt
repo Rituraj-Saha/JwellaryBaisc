@@ -66,9 +66,10 @@ class OrderHistoryFragment : Fragment() {
                is NetworkResult.Success ->{
                    binding.progress.visibility = View.GONE
                    var mLinearLayoutManager = LinearLayoutManager(this@OrderHistoryFragment.requireContext())
-                   Collections.sort<OrderHistoryResponse>(it.data.toMutableList(), SortItems())
+//                   Collections.sort<OrderHistoryResponse>(it.data.toMutableList(), SortItems())
+                  var mList = it.data.sortedByDescending{ it.oid }
 
-                   var adapter = OrderHistoryAdaptor(it.data,this@OrderHistoryFragment.requireContext(),this.requireActivity())
+                   var adapter = OrderHistoryAdaptor(mList,this@OrderHistoryFragment.requireContext(),this.requireActivity())
                    binding.rcylOrderHistory.layoutManager = mLinearLayoutManager
                    binding.rcylOrderHistory.adapter = adapter
                }
@@ -78,6 +79,10 @@ class OrderHistoryFragment : Fragment() {
                }
            }
 
+        }
+
+        binding.imgHelpLine.setOnClickListener {
+            Util.callIntent(this@OrderHistoryFragment.requireContext(),this@OrderHistoryFragment.requireActivity())
         }
 
         return view

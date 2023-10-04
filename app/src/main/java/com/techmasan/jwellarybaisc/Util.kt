@@ -4,26 +4,23 @@ import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
+import android.net.Uri
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
-import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
 import com.techmasan.jwellarybaisc.networkConfig.data.User
-import com.techmasan.jwellarybaisc.networkConfig.viewModels.TokenExpireViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 
 object Util {
-
+    var HELPLINE = ""
     fun makeDialog(layoutId:Int,activity:Activity):Dialog{
         var dialog = Dialog(activity)
         dialog.setContentView(layoutId);
@@ -148,7 +145,18 @@ object Util {
         editor.remove("token")
         editor.remove("user")
         editor.putBoolean("isLogin",false);
+        editor.commit()
     }
 
+    fun callIntent(context: Context,activity: Activity){
+        if(!HELPLINE.equals("")) {
+            mToast(activity,"Redirecting to Helpline Number")
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + HELPLINE))
+            context.startActivity(intent)
+        }
+        else{
+            mToast(activity,"HelpLine Number not found")
+        }
+    }
 
 }

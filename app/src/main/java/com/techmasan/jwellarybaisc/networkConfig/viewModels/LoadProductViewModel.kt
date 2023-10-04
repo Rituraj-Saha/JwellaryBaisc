@@ -28,4 +28,15 @@ class LoadProductViewModel@Inject constructor(
             }
         }
     }
+
+    private var _loadNewFocusedProductResponse = MutableLiveData<NetworkResult<List<RetrivedProduct>>>()
+    val loadNewFocusedProductResponse: LiveData<NetworkResult<List<RetrivedProduct>>> = _loadNewFocusedProductResponse
+    suspend fun loadNewFocusedProduct(token:String) {
+        Log.d("loadProduct","executed")
+        viewModelScope.launch {
+            loadProductRepository.loadNewFocusedProduct(token).collect {
+                _loadNewFocusedProductResponse.postValue(it)
+            }
+        }
+    }
 }

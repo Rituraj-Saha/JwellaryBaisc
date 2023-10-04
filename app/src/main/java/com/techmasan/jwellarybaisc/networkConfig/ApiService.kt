@@ -2,8 +2,10 @@ package com.techmasan.jwellarybaisc.networkConfig
 
 import com.techmasan.jwellarybaisc.Util
 import com.techmasan.jwellarybaisc.model.Grid1Home
+import com.techmasan.jwellarybaisc.networkConfig.data.Config
 import com.techmasan.jwellarybaisc.networkConfig.data.GenerateTokenRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.GenerateTokenResponse
+import com.techmasan.jwellarybaisc.networkConfig.data.Helpline
 import com.techmasan.jwellarybaisc.networkConfig.data.OrderHistoryResponse
 import com.techmasan.jwellarybaisc.networkConfig.data.OrderRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.OrderResponse
@@ -11,6 +13,7 @@ import com.techmasan.jwellarybaisc.networkConfig.data.OtpRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.OtpResponse
 import com.techmasan.jwellarybaisc.networkConfig.data.ProductRequestForOrder
 import com.techmasan.jwellarybaisc.networkConfig.data.RetrivedProduct
+import com.techmasan.jwellarybaisc.networkConfig.data.UpiConfig
 import com.techmasan.jwellarybaisc.networkConfig.data.User
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,6 +42,11 @@ interface ApiService {
 
 
     @Headers("Content-type: application/json")
+    @GET("/product/get-product/focusable")
+    suspend fun loadfocusedProduct(@Header("Authorization")token:String) : List<RetrivedProduct>
+
+
+    @Headers("Content-type: application/json")
     @POST("/api/order/place-order")
     suspend fun placeOrder(@Body orderRequest:OrderRequest, @Header("Authorization")token:String) : OrderResponse
 
@@ -52,4 +60,21 @@ interface ApiService {
     @Headers("Content-type: application/json")
     @POST("/auth/generateToken/tokenExpireCheck")
     suspend fun chekTokenExpire(@Body token: String):Boolean
+
+
+    @Headers("Content-type: application/json")
+    @GET("/config/details")
+    suspend fun getConfig() : Config
+
+
+    @Headers("Content-type: application/json")
+    @GET("/config/upi")
+    suspend fun getUpi() : UpiConfig
+
+
+    @Headers("Content-type: application/json")
+    @GET("/config/helpline")
+    suspend fun getHelpline() : Helpline
+
+
 }

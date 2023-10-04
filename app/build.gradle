@@ -100,4 +100,6 @@ dependencies {
     def compose_version = "1.0.0"
     implementation("androidx.compose.runtime:runtime:$compose_version")
 
+    implementation 'dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3'
+
 }

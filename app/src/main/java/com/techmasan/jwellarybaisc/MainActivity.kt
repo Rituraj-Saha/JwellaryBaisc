@@ -34,6 +34,7 @@ import com.techmasan.jwellarybaisc.fragments.OrderHistoryFragment
 import com.techmasan.jwellarybaisc.model.Grid1Home
 import com.techmasan.jwellarybaisc.model.SliderItemModel
 import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
+import com.techmasan.jwellarybaisc.networkConfig.data.User
 import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoadProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
     private var currentPageCount = 0;
     private var noMoreDataFlag = false
     var grid1HomeList = ArrayList<Grid1Home>()
+    var viewPagerHomeList = ArrayList<Grid1Home>()
 
 
     val run = object : Runnable {
@@ -67,6 +69,10 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 
         viewPager2Implement()
         gridImpementation(this.applicationContext,this)
+
+        binding.imgHelpLine.setOnClickListener {
+            Util.callIntent(this,this)
+        }
 
        binding.bottomNav.add(MeowBottomNavigation.Model(1,R.drawable.baseline_history_24))
         binding.bottomNav.add(MeowBottomNavigation.Model(2,R.drawable.baseline_home_24))
@@ -147,7 +153,29 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
         sliderItems.add(SliderItemModel(imageUri.toString()))
         sliderItems.add(SliderItemModel(imageUri2.toString()))
         sliderItems.add(SliderItemModel(imageUri.toString()))
-        binding.viewPagerImageSlider.adapter = SliderAdapter(sliderItems,binding.viewPagerImageSlider,this)
+
+        lifecycleScope.launch {
+            loadProductViewModel.loadNewFocusedProduct(Util.getToken(this@MainActivity)!!);
+        }
+        loadProductViewModel.loadNewFocusedProductResponse.observe(this){
+            when(it){
+                is NetworkResult.Loading->{}
+                is NetworkResult.Success->{
+                      for(i in it.data){
+                        var imageList = i.imageList.split(",").toMutableList()
+                        for(x in 0..imageList.size-1){
+                            imageList[x] = imageList.get(x).replace("localhost","192.168.0.165")
+                        }
+//                               grid1TempList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),i.discount.toString()+"% Off","\u20B9 "+i.sellPrice.toString(),"0",i.pname,i.description, imageList))
+                          viewPagerHomeList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),i.discount.toString()+"% Off","\u20B9 "+i.sellPrice.toString(),"0",i.pname,i.description, imageList,i.stockQty))
+                    }
+                    binding.viewPagerImageSlider.adapter = SliderAdapter(viewPagerHomeList,binding.viewPagerImageSlider,this,this@MainActivity,this)
+
+                }
+                is NetworkResult.Failure->{}
+            }
+
+        }
 
         binding.viewPagerImageSlider.setClipToPadding(false);
         binding.viewPagerImageSlider.setClipChildren(false);
@@ -223,13 +251,29 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 //                       var grid1TempList: ArrayList<Grid1Home> = ArrayList()
 
                         for(i in it.data){
-                            var imageList = i.imageList.split(",").toMutableList()
-                            for(x in 0..imageList.size-1){
-                                imageList[x] = imageList.get(x).replace("localhost","192.168.0.165")
-                            }
+                            if(i.stockQty>0) {
+                                var imageList = i.imageList.split(",").toMutableList()
+                                for (x in 0..imageList.size - 1) {
+                                    imageList[x] =
+                                        imageList.get(x).replace("localhost", "192.168.0.165")
+                                }
 //                               grid1TempList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),i.discount.toString()+"% Off","\u20B9 "+i.sellPrice.toString(),"0",i.pname,i.description, imageList))
-                            grid1HomeList.add(Grid1Home(i.pid,i.thumbnail.replace("localhost","192.168.0.165"),"\u20B9 "+i.basePrice.toString(),i.discount.toString()+"% Off","\u20B9 "+i.sellPrice.toString(),"0",i.pname,i.description, imageList,i.stockQty))
-                        }
+                                grid1HomeList.add(
+                                    Grid1Home(
+                                        i.pid,
+                                        i.thumbnail.replace("localhost", "192.168.0.165"),
+                                        "\u20B9 " + i.basePrice.toString(),
+                                        i.discount.toString() + "% Off",
+                                        "\u20B9 " + i.sellPrice.toString(),
+                                        "0",
+                                        i.pname,
+                                        i.description,
+                                        imageList,
+                                        i.stockQty
+                                    )
+                                )
+                            }
+                            }
 //                           grid1HomeList.addAll(grid1TempList)
 
                     }
@@ -317,6 +361,12 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
         Log.d("Session Info: ","token: "+Util.getToken(this)
                 +" isLogin:"+Util.isLogin(this)
                 +" User: "+Util.getUser(this))
+        if(!Util.getUser(this).addressLine.equals("")||Util.getUser(this).addressLine!=null){
+            binding.txtAddress.text = Util.getUser(this).addressLine
+        }
+        if(!Util.getUser(this).name.equals("")||Util.getUser(this).name!=null){
+            binding.txtName.text = Util.getUser(this).name
+        }
     }
 
 

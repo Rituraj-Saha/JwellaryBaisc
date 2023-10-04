@@ -7,14 +7,12 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.techmasan.jwellarybaisc.Entity.Cart
 import com.techmasan.jwellarybaisc.RoomViewModel.CartViewModel
 import com.techmasan.jwellarybaisc.adaptor.CartAdapter
@@ -23,16 +21,24 @@ import com.techmasan.jwellarybaisc.databinding.ActivityCartBinding
 import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
 import com.techmasan.jwellarybaisc.networkConfig.data.OrderRequest
 import com.techmasan.jwellarybaisc.networkConfig.data.ProductRequestForOrder
-import com.techmasan.jwellarybaisc.networkConfig.viewModels.LoadProductViewModel
 import com.techmasan.jwellarybaisc.networkConfig.viewModels.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.easyupipayment.EasyUpiPayment
+import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener
+import dev.shreyaspatil.easyupipayment.model.TransactionDetails
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
 
 @AndroidEntryPoint
-class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
+class CartActivity : AppCompatActivity(), CartClickDeleteInterface, PaymentStatusListener {
     lateinit var viewModal: CartViewModel
     private lateinit var binding: ActivityCartBinding
     private val orderViewModel: OrderViewModel by viewModels()
+    lateinit var orderRequest: OrderRequest
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +50,6 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
             this,
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         ).get(CartViewModel::class.java)
-
 
 
         var cartAdaptor:CartAdapter = CartAdapter(this,this,binding.totalPrice)
@@ -87,17 +92,15 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
 
                     when(checkedId){
                         R.id.rbCod->{
-                            Util.mToast(this,"Cod is selected")
+//                            Util.mToast(this,"Cod is selected")
                             paymentType = "cod"
                         }
                         R.id.rbUpi->{
-                            Util.mToast(this,"UPI is selected")
+//                            Util.mToast(this,"UPI is selected")
                             paymentType = "upi"
                         }
                     }
                 })
-
-
 
 
                 txtCancel.setOnClickListener {
@@ -113,11 +116,72 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                             productRequestList.add(productRequestForOrder)
                         }
 
+                        if(paymentType.equals("cod")) {
+                             orderRequest = OrderRequest(
+                                Util.getUser(this@CartActivity).phoneNumber,
+                                productRequestList,
+                                binding.totalPrice.text.toString().substring(15).toDouble(),
+                                etAddress.text.toString() + ", Pin:" + etPin.text.toString() + ", Landmark: " + etLandmark.text.toString(),
+                                Util.getUser(this@CartActivity).email,
+                                paymentType,
+                                "NP"
+                            )
+                            //check wheteher token is present and not expired and user is loged in
+                            orderViewModel.sendOrderRequest(
+                                orderRequest,
+                                Util.getToken(this@CartActivity)!!
+                            );
+                        }
+                        else{
+                             orderRequest = OrderRequest(
+                                Util.getUser(this@CartActivity).phoneNumber,
+                                productRequestList,
+                                binding.totalPrice.text.toString().substring(15).toDouble(),
+                                etAddress.text.toString() + ", Pin:" + etPin.text.toString() + ", Landmark: " + etLandmark.text.toString(),
+                                Util.getUser(this@CartActivity).email,
+                                paymentType,
+                                "NP"
+                            )
+                            orderViewModel.requestUpi();
+                            orderViewModel.upiResponse.observe(this@CartActivity){
+                                when(it){
+                                    is NetworkResult.Loading->{}
+                                    is NetworkResult.Success->{
 
-                        var orderRequest:OrderRequest = OrderRequest(Util.getUser(this@CartActivity).phoneNumber,productRequestList,binding.totalPrice.text.toString().substring(15).toDouble(),etAddress.text.toString(),Util.getUser(this@CartActivity).email,paymentType,"NP")
-                        //check wheteher token is present and not expired and user is loged in
-                        orderViewModel.sendOrderRequest(orderRequest,Util.getToken(this@CartActivity)!!);
+                                        var vpa = it.data.upiVpa
+                                        var name = it.data.upiName
+                                        var mcode = it.data.upiMerchantCode
+                                        val easyUpiPayment = EasyUpiPayment(this@CartActivity) {
+                                            this.payeeVpa = vpa
+                                            this.payeeName = name
+                                            this.payeeMerchantCode = mcode
+                                            val c: Date = Calendar.getInstance().getTime()
+                                            val df = SimpleDateFormat("ddMMyyyyHHmmss", Locale.getDefault())
+                                            val transcId: String = df.format(c)
+                                            this.transactionId = transcId
+                                            this.transactionRefId = transcId
+                                            this.description = Util.getUser(this@CartActivity).phoneNumber
+                                            this.amount =  binding.totalPrice.text.toString().substring(15)
+                                        }
 
+                                        try {
+                                            easyUpiPayment.startPayment()
+                                            easyUpiPayment.setPaymentStatusListener(this@CartActivity)
+                                        }
+                                        catch (e:Exception){
+                                            Util.mToast(this@CartActivity,e.message.toString())
+                                        }
+
+                                    }
+
+                                    is NetworkResult.Failure->{
+                                        Util.mToast(this@CartActivity,"Some error occured during upi..")
+                                    }
+                                }
+
+                            }
+
+                        }
                     }
 
                 }
@@ -153,9 +217,6 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
                 }
             }
         }
-
-
-
 
     }
 
@@ -200,5 +261,23 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface {
     }
 
 
+    override fun onTransactionCancelled() {
+        Util.mToast(this@CartActivity,"Transaction Cancelled")
+    }
+
+    override fun onTransactionCompleted(transactionDetails: TransactionDetails) {
+        if(transactionDetails.transactionStatus.equals("SUCCESS")){
+            lifecycleScope.launch{
+                orderViewModel.sendOrderRequest(
+                    orderRequest,
+                    Util.getToken(this@CartActivity)!!
+                );
+            }
+            Util.mToast(this@CartActivity,"Order Placed")
+        }
+        else{
+            Util.mToast(this@CartActivity,"Transaction failed")
+        }
+    }
 
 }

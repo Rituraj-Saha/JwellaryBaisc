@@ -67,6 +67,9 @@ class OrderHistoryAdaptor(var mList:List<OrderHistoryResponse>, var context: Con
         val layout2: View = binding.root
         binding.requestQty.text = orderHistoryOrderValue.requestQty.toString()
         binding.txtTitle.text = orderHistoryOrderValue.pname
+        binding.txtBasePrice.text = "\u20B9"+orderHistoryOrderValue.basePrice.toString()
+        binding.txtDPrice.text = orderHistoryOrderValue.discount.toString()+"%"
+        binding.sellPrice.text = "\u20B9"+orderHistoryOrderValue.sellPrice.toString()
         Glide.with(context).load(orderHistoryOrderValue.thumbnail).into(binding.imgProduct)
         viewGroup.addView(layout2)
     }
