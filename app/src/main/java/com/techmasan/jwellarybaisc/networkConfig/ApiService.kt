@@ -15,6 +15,7 @@ import com.techmasan.jwellarybaisc.networkConfig.data.ProductRequestForOrder
 import com.techmasan.jwellarybaisc.networkConfig.data.RetrivedProduct
 import com.techmasan.jwellarybaisc.networkConfig.data.UpiConfig
 import com.techmasan.jwellarybaisc.networkConfig.data.User
+import com.techmasan.jwellarybaisc.networkConfig.data.UserUpdate
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -75,6 +76,11 @@ interface ApiService {
     @Headers("Content-type: application/json")
     @GET("/config/helpline")
     suspend fun getHelpline() : Helpline
+
+
+    @Headers("Content-type: application/json")
+    @POST("/auth/user/update-user")
+    suspend fun updateUser(@Body userUpdate: UserUpdate,@Header("Authorization")token:String) : User
 
 
 }

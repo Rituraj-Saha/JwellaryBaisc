@@ -140,12 +140,16 @@ object Util {
         var user:User = gson.fromJson<User>(json!!,User::class.java)
         return user
     }
-    fun logOut(activity: Activity){
+    fun logOut(activity: Activity,context: Context){
         var editor = getSharedPref(activity)
         editor.remove("token")
         editor.remove("user")
+        editor.commit()
         editor.putBoolean("isLogin",false);
         editor.commit()
+        var intent = Intent(activity,LoginActivity::class.java)
+        context.startActivity(intent)
+        activity.finish()
     }
 
     fun callIntent(context: Context,activity: Activity){
@@ -157,6 +161,16 @@ object Util {
         else{
             mToast(activity,"HelpLine Number not found")
         }
+    }
+//Used in profile updation
+    fun reFreshUserData(activity: Activity,user: User){
+        var editor = getSharedPref(activity)
+        editor.remove("user")
+        editor.commit()
+        val gson = Gson()
+        val json = gson.toJson(user)
+        editor.putString("user", json)
+        editor.commit()
     }
 
 }

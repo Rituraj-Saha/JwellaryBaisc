@@ -31,6 +31,7 @@ import com.techmasan.jwellarybaisc.adaptor.GridRecyclHomeAdaptor
 import com.techmasan.jwellarybaisc.adaptor.SliderAdapter
 import com.techmasan.jwellarybaisc.databinding.ActivityMainBinding
 import com.techmasan.jwellarybaisc.fragments.OrderHistoryFragment
+import com.techmasan.jwellarybaisc.fragments.ProfileFragment
 import com.techmasan.jwellarybaisc.model.Grid1Home
 import com.techmasan.jwellarybaisc.model.SliderItemModel
 import com.techmasan.jwellarybaisc.networkConfig.data.NetworkResult
@@ -99,7 +100,12 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
                     }
                 }
                 3->{
-                    Util.mToast(this,"Profile should open")
+                    if(currentFragment!=null){
+                        val fragmentManager = supportFragmentManager
+                        fragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
+                    }
+                    Util.callFragmentWithoutStackTrace(ProfileFragment(),supportFragmentManager,binding.frameContainer.id)
+
                 }
             }
         }
