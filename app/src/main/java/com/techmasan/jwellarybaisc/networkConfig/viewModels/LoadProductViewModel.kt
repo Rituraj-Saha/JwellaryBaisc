@@ -20,10 +20,10 @@ class LoadProductViewModel@Inject constructor(
 ) : ViewModel() {
     private var _loadNewProductResponse = MutableLiveData<NetworkResult<List<RetrivedProduct>>>()
     val loadNewProductResponse: LiveData<NetworkResult<List<RetrivedProduct>>> = _loadNewProductResponse
-    suspend fun loadNewProduct(pageNo: Int,token:String) {
+    suspend fun loadNewProduct(pageNo: Int) {
         Log.d("loadProduct","executed")
         viewModelScope.launch {
-            loadProductRepository.loadNewProduct(pageNo,token).collect {
+            loadProductRepository.loadNewProduct(pageNo).collect {
                 _loadNewProductResponse.postValue(it)
             }
         }
@@ -31,10 +31,10 @@ class LoadProductViewModel@Inject constructor(
 
     private var _loadNewFocusedProductResponse = MutableLiveData<NetworkResult<List<RetrivedProduct>>>()
     val loadNewFocusedProductResponse: LiveData<NetworkResult<List<RetrivedProduct>>> = _loadNewFocusedProductResponse
-    suspend fun loadNewFocusedProduct(token:String) {
+    suspend fun loadNewFocusedProduct() {
         Log.d("loadProduct","executed")
         viewModelScope.launch {
-            loadProductRepository.loadNewFocusedProduct(token).collect {
+            loadProductRepository.loadNewFocusedProduct().collect {
                 _loadNewFocusedProductResponse.postValue(it)
             }
         }

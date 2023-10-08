@@ -10,20 +10,20 @@ import javax.inject.Inject
 
 class LoadProductRepository@Inject constructor(private val apiService: ApiService) {
 
-    suspend fun loadNewProduct(pageNo:Int,token:String) = flow {
+    suspend fun loadNewProduct(pageNo:Int) = flow {
         emit(NetworkResult.Loading(true))
         Log.d("loadProduct","executed")
-        val response = apiService.loadProduct(pageNo,token)
+        val response = apiService.loadProduct(pageNo)
         Log.d("loadProduct",response.toString())
         emit(NetworkResult.Success(response))
     }.catch { e ->
         emit(NetworkResult.Failure(e.message ?: "Unknown Error"))
     }
 
-    suspend fun loadNewFocusedProduct(token:String) = flow {
+    suspend fun loadNewFocusedProduct() = flow {
         emit(NetworkResult.Loading(true))
         Log.d("loadProduct","executed")
-        val response = apiService.loadfocusedProduct(token)
+        val response = apiService.loadfocusedProduct()
         Log.d("loadProduct",response.toString())
         emit(NetworkResult.Success(response))
     }.catch { e ->

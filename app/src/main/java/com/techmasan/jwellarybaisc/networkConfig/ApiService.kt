@@ -39,12 +39,12 @@ interface ApiService {
 
     @Headers("Content-type: application/json")
     @GET("/product/get-product")
-    suspend fun loadProduct(@Query("pageNo") pageNo:Int, @Header("Authorization")token:String) : List<RetrivedProduct>
+    suspend fun loadProduct(@Query("pageNo") pageNo:Int) : List<RetrivedProduct>
 
 
     @Headers("Content-type: application/json")
     @GET("/product/get-product/focusable")
-    suspend fun loadfocusedProduct(@Header("Authorization")token:String) : List<RetrivedProduct>
+    suspend fun loadfocusedProduct() : List<RetrivedProduct>
 
 
     @Headers("Content-type: application/json")

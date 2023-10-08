@@ -56,7 +56,7 @@ class OrderHistoryFragment : Fragment() {
         binding = FragmentOrderHistoryBinding.inflate(layoutInflater)
         var view = binding.root
         lifecycleScope.launch {
-            orderHistoryViewModel.orderHistoryResponse(Util.getUser(this@OrderHistoryFragment.requireActivity()).phoneNumber,Util.getToken(this@OrderHistoryFragment.requireActivity())!!)
+            orderHistoryViewModel.orderHistoryResponse(Util.getUser(this@OrderHistoryFragment.requireActivity())?.phoneNumber!!,Util.getToken(this@OrderHistoryFragment.requireActivity())!!)
         }
         orderHistoryViewModel.orderHistoryResponse.observe(this@OrderHistoryFragment.requireActivity()){
            when(it){

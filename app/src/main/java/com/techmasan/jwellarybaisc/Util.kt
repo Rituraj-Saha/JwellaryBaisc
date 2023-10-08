@@ -132,13 +132,15 @@ object Util {
         var bearerToken = "Bearer "+sharedpreferences.getString("token","");
         return bearerToken
     }
-    fun getUser(activity: Activity):User{
+    fun getUser(activity: Activity):User?{
         var sharedpreferences: SharedPreferences = activity.getSharedPreferences("MyPREFERENCES", Context.MODE_PRIVATE)
         val gson = Gson()
         val json: String? = sharedpreferences.getString("user", "")
-
-        var user:User = gson.fromJson<User>(json!!,User::class.java)
-        return user
+        if(json!=null || !json.equals("")){
+            var user:User? = gson.fromJson<User>(json,User::class.java)
+            return user
+        }
+       return null;
     }
     fun logOut(activity: Activity,context: Context){
         var editor = getSharedPref(activity)

@@ -48,15 +48,15 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(layoutInflater)
         val view = binding.root
-        binding.tiName.setText(Util.getUser(this.requireActivity()).name)
-        binding.tiEmail.setText(Util.getUser(this.requireActivity()).email)
-        binding.tiAddressLine.setText(Util.getUser(this.requireActivity()).addressLine)
-        binding.tiPincode.setText(Util.getUser(this.requireActivity()).pinCode)
-        binding.tiState.setText(Util.getUser(this.requireActivity()).state)
+        binding.tiName.setText(Util.getUser(this.requireActivity())?.name)
+        binding.tiEmail.setText(Util.getUser(this.requireActivity())?.email)
+        binding.tiAddressLine.setText(Util.getUser(this.requireActivity())?.addressLine)
+        binding.tiPincode.setText(Util.getUser(this.requireActivity())?.pinCode)
+        binding.tiState.setText(Util.getUser(this.requireActivity())?.state)
         binding.txtProceed.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
             lifecycleScope.launch {
-                updateUserViewModel.updateUser(UserUpdate(Util.getUser(this@ProfileFragment.requireActivity()).phoneNumber,
+                updateUserViewModel.updateUser(UserUpdate(Util.getUser(this@ProfileFragment.requireActivity())?.phoneNumber!!,
                     binding.tiAddressLine.text.toString(),
                     binding.tiEmail.text.toString(),
                     binding.tiName.text.toString(),

@@ -82,8 +82,8 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface, PaymentStatu
                 var txtexpectedDelivary = dialog.findViewById<TextView>(R.id.txtexpectedDelivary)
                 txtexpectedDelivary.text = "Within 7 days"
 
-                etAddress.setText(Util.getUser(this).addressLine)
-                etPin.setText(Util.getUser(this).pinCode)
+                etAddress.setText(Util.getUser(this)?.addressLine)
+                etPin.setText(Util.getUser(this)?.pinCode)
 
                 rbCod.isChecked = true
                 var paymentType = "cod"
@@ -118,11 +118,11 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface, PaymentStatu
 
                         if(paymentType.equals("cod")) {
                              orderRequest = OrderRequest(
-                                Util.getUser(this@CartActivity).phoneNumber,
+                                Util.getUser(this@CartActivity)?.phoneNumber!!,
                                 productRequestList,
                                 binding.totalPrice.text.toString().substring(15).toDouble(),
                                 etAddress.text.toString() + ", Pin:" + etPin.text.toString() + ", Landmark: " + etLandmark.text.toString(),
-                                Util.getUser(this@CartActivity).email,
+                                Util.getUser(this@CartActivity)?.email!!,
                                 paymentType,
                                 "NP"
                             )
@@ -134,11 +134,11 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface, PaymentStatu
                         }
                         else{
                              orderRequest = OrderRequest(
-                                Util.getUser(this@CartActivity).phoneNumber,
+                                Util.getUser(this@CartActivity)?.phoneNumber!!,
                                 productRequestList,
                                 binding.totalPrice.text.toString().substring(15).toDouble(),
                                 etAddress.text.toString() + ", Pin:" + etPin.text.toString() + ", Landmark: " + etLandmark.text.toString(),
-                                Util.getUser(this@CartActivity).email,
+                                Util.getUser(this@CartActivity)?.email!!,
                                 paymentType,
                                 "NP"
                             )
@@ -160,7 +160,7 @@ class CartActivity : AppCompatActivity(), CartClickDeleteInterface, PaymentStatu
                                             val transcId: String = df.format(c)
                                             this.transactionId = transcId
                                             this.transactionRefId = transcId
-                                            this.description = Util.getUser(this@CartActivity).phoneNumber
+                                            this.description = Util.getUser(this@CartActivity)?.phoneNumber
                                             this.amount =  binding.totalPrice.text.toString().substring(15)
                                         }
 

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".SplashActivity">
     <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:id="@+id/animation_view"
         app:lottie_rawRes="@raw/welcome"
         app:lottie_autoPlay="true"

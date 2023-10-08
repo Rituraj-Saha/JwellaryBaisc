@@ -192,7 +192,6 @@ class SplashActivity : AppCompatActivity() {
                                     !Util.getToken(this@SplashActivity).equals("")){
                                     Log.d(TAG,"in side token")
                                     tokenExpireViewModel.chekTokenExpire(Util.getToken(this@SplashActivity)!!.replace("Bearer ",""))
-
                                 }
                                 else{
                                     val i = Intent(this@SplashActivity, LoginActivity::class.java)
@@ -254,7 +253,25 @@ class SplashActivity : AppCompatActivity() {
 
                                 // on the below line we are finishing
                                 // our current activity.
-                                val i = Intent(this@SplashActivity, LoginActivity::class.java)
+                                configViewModel.helpLineResponse.observe(this@SplashActivity){
+                                    when(it){
+                                        is NetworkResult.Loading->{
+                                            Log.d("helpine","loading")
+                                        }
+                                        is NetworkResult.Success->{
+
+                                            Util.HELPLINE = it.data.helpLine
+                                            Log.d("helpine",Util.HELPLINE+"a")
+                                            val i = Intent(this@SplashActivity, MainActivity::class.java)
+                                            startActivity(i)
+                                            finish()
+                                        }
+                                        is NetworkResult.Failure->{
+                                            Log.d("helpine","failed"+it.errorMessage)
+                                        }
+                                    }
+                                }
+                                val i = Intent(this@SplashActivity, MainActivity::class.java)
                                 startActivity(i)
                                 finish()
                             }, 3000)

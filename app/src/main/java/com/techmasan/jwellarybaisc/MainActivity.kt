@@ -89,8 +89,10 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
                         fragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
 
                     }
-
+                    if(Util.isLogin(this))
                     Util.callFragmentWithoutStackTrace(OrderHistoryFragment(),supportFragmentManager,binding.frameContainer.id)
+                    else
+                        Util.mToast(this,"Please Login First to get Order History")
 
                 }
                 2->{
@@ -104,8 +106,13 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
                         val fragmentManager = supportFragmentManager
                         fragmentManager.beginTransaction().remove(currentFragment as Fragment).commit()
                     }
+                    if(Util.isLogin(this))
                     Util.callFragmentWithoutStackTrace(ProfileFragment(),supportFragmentManager,binding.frameContainer.id)
-
+                    else{
+                        val i = Intent(this@MainActivity, LoginActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
                 }
             }
         }
@@ -161,7 +168,7 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
         sliderItems.add(SliderItemModel(imageUri.toString()))
 
         lifecycleScope.launch {
-            loadProductViewModel.loadNewFocusedProduct(Util.getToken(this@MainActivity)!!);
+            loadProductViewModel.loadNewFocusedProduct();
         }
         loadProductViewModel.loadNewFocusedProductResponse.observe(this){
             when(it){
@@ -364,14 +371,18 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 
 
     fun getSessionInfo(){
-        Log.d("Session Info: ","token: "+Util.getToken(this)
-                +" isLogin:"+Util.isLogin(this)
-                +" User: "+Util.getUser(this))
-        if(!Util.getUser(this).addressLine.equals("")||Util.getUser(this).addressLine!=null){
-            binding.txtAddress.text = Util.getUser(this).addressLine
-        }
-        if(!Util.getUser(this).name.equals("")||Util.getUser(this).name!=null){
-            binding.txtName.text = Util.getUser(this).name
+        if(Util.getUser(this)!=null) {
+            Log.d(
+                "Session Info: ", "token: " + Util.getToken(this)
+                        + " isLogin:" + Util.isLogin(this)
+                        + " User: " + Util.getUser(this)
+            )
+            if (!Util.getUser(this)?.addressLine.equals("") || Util.getUser(this)?.addressLine != null) {
+                binding.txtAddress.text = Util.getUser(this)?.addressLine
+            }
+            if (!Util.getUser(this)?.name.equals("") || Util.getUser(this)?.name != null) {
+                binding.txtName.text = Util.getUser(this)?.name
+            }
         }
     }
 
@@ -382,7 +393,7 @@ class MainActivity : AppCompatActivity() ,AddToCartInterface{
 //       Log.d("cpage: ",curentPage.toString()+" "+noMoreDataFlag)
 
        lifecycleScope.launch {
-           loadProductViewModel.loadNewProduct(curentPage,Util.getToken(this@MainActivity)!!);
+           loadProductViewModel.loadNewProduct(curentPage);
        }
 
 
